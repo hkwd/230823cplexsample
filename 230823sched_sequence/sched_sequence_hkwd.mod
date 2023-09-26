@@ -71,8 +71,8 @@ int   DueDate    [Houses] = ...;
 //終了希望日以降の1日当たりの遅延ペナルティコスト
 float Weight     [Houses] = ...; 
 
-//住宅から住宅への移動必要日数
-tuple triplet { int loc1; int loc2; int value; }; 
+//住宅(type)から住宅(type)への移動必要日数
+tuple triplet { int type1; int type2; int value; }; 
 {triplet} transitionTimes = { <i,j, ftoi(abs(i-j))> | i in Houses, j in Houses };
 
 
@@ -81,7 +81,7 @@ tuple triplet { int loc1; int loc2; int value; };
 dvar interval itvs  [h in Houses][t in TaskNames] size Duration[t];
 //各住宅の間隔変数。スタートは開始可能日以降。これで制約2の「各住宅は開始可能日以降に建設を開始する必要がある」が制約される
 dvar interval houses[h in Houses] in ReleaseDate[h]..(maxint div 2)-1;
-//作業者のシーケンス変数。各作業者毎に各住宅の、実行可能な各タスクを割り当てる。これで制約3「各タスクは担当作業者が行う」が制約される
+//作業者のシーケンス変数。各作業者毎に各住宅の、実行可能な各タスクを割り当てる。これで制約3「各タスクは担当作業者が行う」が制約される。ここではｔypeは住宅番号をあらわしている
 dvar sequence workers[w in WorkerNames]
     in all(h in Houses, t in TaskNames: Worker[t]==w) itvs[h][t]
     types all(h in Houses, t in TaskNames: Worker[t]==w) h;
