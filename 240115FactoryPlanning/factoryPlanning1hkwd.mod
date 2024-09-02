@@ -64,14 +64,14 @@ dvar int+ Hold[Prod][R0] in 0..MaxHold;
 dvar int+ Sell[j in Prod][m in Months] in 0..MarketProd[m,j];
 
 //// 決定関数
-// 売上＝製品ごとの売上*販売数
-dexpr float Sales = 
+// 利益＝製品ごとの利益*販売数
+dexpr float Profit = 
   sum (j in Prod, m in Months) ProfitProd[j] * Sell[j][m];
 // コスト＝在庫コスト*在庫量
 dexpr float Cost = 
   sum (j in Prod, m in Months) CostHold * Hold[j][m];
-// 粗利=売上-コスト
-dexpr float GrossProfit = Sales - Cost;
+// 粗利=利益-コスト
+dexpr float GrossProfit = Profit - Cost;
 
   
 //// 目的関数
