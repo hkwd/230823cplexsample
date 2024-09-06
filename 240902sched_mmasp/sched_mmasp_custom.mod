@@ -42,12 +42,12 @@ int duration[Jobs,Machines] = ...;
 // コスト
 int cost    [Jobs,Machines] =...;
  
-//タスク。開始可能日と締切日がある
-dvar interval task[j in Jobs] in release[j]..due[j];
-//マシンに割り当てられたタスク
-dvar interval assignedTaskToMachine[j in Jobs][m in Machines] optional size duration[j][m];
-//マシンに割り当てられたタスクの順序
-dvar sequence SeqOfTAssignedTaskToMachine[m in Machines] in all(j in Jobs) assignedTaskToMachine[j][m];
+//ジョブ。開始可能日と締切日がある
+dvar interval job[j in Jobs] in release[j]..due[j];
+//マシンに割り当てられたジョブ
+dvar interval assignedJobToMachine[j in Jobs][m in Machines] optional size duration[j][m];
+//マシンに割り当てられたジョブの順序
+dvar sequence machine[m in Machines] in all(j in Jobs) assignedJobToMachine[j][m];
 
 //失敗回数の設定
 execute {
@@ -58,17 +58,19 @@ execute {
 // Minimize the total processing cost (24)
 // 総処理コストを最小限に抑える（24）
 minimize 
-  sum(j in Jobs, m in Machines) cost[j][m] * presenceOf(assignedTaskToMachine[j][m]);
+  sum(j in Jobs, m in Machines) cost[j][m] * presenceOf(assignedJobToMachine[j][m]);
 subject to {
   // Each job needs one unary resource of the alternative set s (28)
   //制約2:各ジョブはマシンのどちらかに割り当てる
   forall(j in Jobs)
     ct1_AssignOneOfTheMachneToTheJob:
-    alternative(task[j], all(m in Machines) assignedTaskToMachine[j][m]);
+    alternative(job[j], all(m in Machines) assignedJobToMachine[j][m]);
+  
   // No overlap on machines
   // 制約3:マシンのスケジュールは重複しない
   forall(m in Machines)
      ct2MachineSchedulesNoOverlap:
-     noOverlap(SeqOfTAssignedTaskToMachine[m]);
+     noOverlap(machine[m]);
+  
 };
 
