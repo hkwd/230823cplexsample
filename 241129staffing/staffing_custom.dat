@@ -38,5 +38,5 @@ PeopleSkills = {
  <David,{cashier}>
 };
 // 各人の出勤不可曜日
-//Unavailable = {<Abe, Wed>};
-Unavailable = {};
+Unavailable = {<Abe, Wed>};
+//Unavailable = {};

@@ -46,7 +46,7 @@ range Shifts = 1..Totalshifts;
 {string} Weekdays = ...;   // 労働曜日 
 
 
-int Req[Weekdays][Shifts][Skills] = ...;  // 各シフトに必要なスキルタイプの人数
+int Req[Weekdays][Shifts][Skills] = ...;  // 各シフトの割当要求人数
           
 {string} People = ...;     // 人員       
 // Data Structure
@@ -143,7 +143,8 @@ subject to {
   // 制約３:夜のシフトで労働する人は、翌日の朝のシフトで労働しません
   forall(p in People, k in Skills) {
     ct03_1:   
-    Assign["Tue"][1][p][k] <= 1 - sum(j in Skills) Assign["Mon"][Totalshifts][p][j];
+    Assign["Tue"][1][p][k]+ sum(j in Skills) Assign["Mon"][Totalshifts][p][j] <= 1 ;
+    // Assign["Tue"][1][p][k] <= 1 - sum(j in Skills) Assign["Mon"][Totalshifts][p][j];
     ct03_2:   
     Assign["Wed"][1][p][k] <= 1 - sum(j in Skills) Assign["Tue"][Totalshifts][p][j];
   }
